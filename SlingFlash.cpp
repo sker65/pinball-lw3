@@ -14,7 +14,7 @@ SlingFlash::SlingFlash(Effect* effect) {
 SlingFlash::~SlingFlash() {
 }
 
-void SlingFlash::onSwitchUpdate(bool active){
+void SlingFlash::onSwitchUpdate(bool active, int num){
 	if( active ) effect->start();
 }
 

@@ -17,7 +17,7 @@ public:
 	SlingFlash(Effect* effect);
 	virtual ~SlingFlash();
 
-	virtual void onSwitchUpdate(bool active);
+	virtual void onSwitchUpdate(bool active, int num);
 private:
 	Effect* effect;
 };

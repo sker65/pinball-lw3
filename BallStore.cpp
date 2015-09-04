@@ -11,16 +11,17 @@
 BallStore::BallStore(int maxBalls) {
 	this->maxBalls = maxBalls;
 	this->balls = maxBalls;
+	this->switches = (int*)malloc( sizeof(int)*maxBalls);
 }
 
 BallStore::~BallStore() {
 }
 
-void BallStore::onSwitchUpdate(bool active) {
-	if( active ) {
-		if( balls< maxBalls) balls++;
-	} else {
-		if( balls>0) balls--;
+void BallStore::onSwitchUpdate(bool active, int num) {
+	switches[num%maxBalls] = (active?1:0);
+	balls = 0;
+	for( int i = 0; i<maxBalls; i++) {
+		balls += switches[i];
 	}
 	Serial.print("Balls: ");Serial.println(balls);
 }

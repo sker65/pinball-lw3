@@ -2,6 +2,8 @@
 #include "BallStore.h"
 #include "Flash.h"
 #include "Attract.h"
+#include "NormalPlay.h"
+#include "MultiBallPlay.h"
 #include "LedDriver.h"
 #include "SlingFlash.h"
 #include "SwitchScanner.h"
@@ -12,9 +14,11 @@ SwitchScanner switchScanner(300);
 
 // this will called as interrupt triggered by falling edge on pin 2
 void colStrobe() {
-	// as the hole col strobe is ca 933 us long, we start the timer right in the middle
-	delayMicroseconds(450);
-	Timer1.start();
+	if( !switchScanner.getSwitchChanged() ) {
+		// as the hole col strobe is ca 933 us long, we start the timer right in the middle
+		delayMicroseconds(450);
+		Timer1.start();
+	}
 }
 
 void readSwitches() {
@@ -43,7 +47,9 @@ int allLeds[] = { // von unten nach oben
 		17,16,15,11,19,
 		8,20,9 };
 
-Attract attract(allLeds, 33, 10);  // array of led index, num, updates per sec
+Attract attract(allLeds, 33, 20);  // array of led index, num, updates per sec
+NormalPlay normalPlay(allLeds, 33, 20);
+MultiBallPlay multiBallPlay(allLeds, 33, 20);
 
 LedDriver ledDriver(40);
 
@@ -68,16 +74,18 @@ void setup() {
 	pinMode(30, OUTPUT); // Port B7 for control wave output
 
 	// register ball store for 3 switches
-	switchScanner.registerSwitchAction(1,0, &ballStore);
-	switchScanner.registerSwitchAction(1,7, &ballStore);
-	switchScanner.registerSwitchAction(1,5, &ballStore);
+	switchScanner.registerSwitchAction(1,0, &ballStore, PERIODIC);
+	switchScanner.registerSwitchAction(1,7, &ballStore, PERIODIC);
+	switchScanner.registerSwitchAction(1,5, &ballStore, PERIODIC);
 
 	ledDriver.registerEffect(&attract);
+	ledDriver.registerEffect(&normalPlay);
+	ledDriver.registerEffect(&multiBallPlay);
 	ledDriver.registerEffect(&slingLeftFlash);
 	ledDriver.registerEffect(&slingRightFlash);
 
-	switchScanner.registerSwitchAction(4,2,&slingRight);
-	switchScanner.registerSwitchAction(3,2,&slingLeft);
+	switchScanner.registerSwitchAction(4,2,&slingRight, EDGE);
+	switchScanner.registerSwitchAction(3,2,&slingLeft, EDGE);
 
 	// this is active by default
 	attract.active = true;
@@ -89,4 +97,22 @@ void loop() {
 	uint32_t now = millis();
 	switchScanner.update(now);
 	ledDriver.update(now);
+	switch(ballStore.getBalls() ) {
+	case 3:
+		attract.active = true;
+		normalPlay.active = false;
+		multiBallPlay.active = false;
+		break;
+	case 2:
+	case 1:
+		attract.active = false;
+		normalPlay.active = true;
+		multiBallPlay.active = false;
+		break;
+	case 0:
+		attract.active = false;
+		normalPlay.active = false;
+		multiBallPlay.active = true;
+		break;
+	}
 }

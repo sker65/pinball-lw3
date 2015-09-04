@@ -17,6 +17,7 @@ class ActionEntry {
 public:
 	SwitchAction* action;
 	int col;
+	int row;
 	byte rowMask;
 	Trigger trigger;
 };
@@ -32,11 +33,16 @@ public:
 	virtual ~SwitchScanner();
 
 	void readSwitches();
-	void registerSwitchAction(int col, int row, SwitchAction* action);
+	void registerSwitchAction(int col, int row, SwitchAction* action, Trigger trigger = EDGE);
 
 	void update(uint32_t now);
 
 	void printbin(byte bin);
+	void dump();
+
+	volatile boolean getSwitchChanged() const {
+		return switchChanged;
+	}
 
 	int handlerIndex;
 	ActionEntry handlers[MAX_HANDLERS];
@@ -56,6 +62,7 @@ public:
 	volatile int pin;
 
 	volatile boolean switchChanged;
+	volatile boolean colChanged;
 
 };
 

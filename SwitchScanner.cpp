@@ -12,6 +12,7 @@
 SwitchScanner::SwitchScanner(uint32_t delay) {
 	pin = 0x80;
 	switchChanged = false;
+	colChanged = false;
 	col = 0;
 	rowIndex=0;
 	handlerIndex = 0;
@@ -20,10 +21,12 @@ SwitchScanner::SwitchScanner(uint32_t delay) {
 	nextPeriodic = 0L;
 }
 
-void SwitchScanner::registerSwitchAction(int col, int row, SwitchAction* action) {
+void SwitchScanner::registerSwitchAction(int col, int row, SwitchAction* action, Trigger t /* = EDGE*/) {
 	handlers[handlerIndex].action = action;
 	handlers[handlerIndex].col = col;
+	handlers[handlerIndex].row = row;
 	handlers[handlerIndex].rowMask = (1 << row);
+	handlers[handlerIndex].trigger = t;
 	if( handlerIndex < MAX_HANDLERS ) handlerIndex++;
 }
 
@@ -43,15 +46,18 @@ void SwitchScanner::readSwitches() {
 
 	// compare this row with the row read last time
 	if( rows[rowIndex][col] != rows[row][col] ) {
-		switchChanged = true;
+		colChanged = true;
 	}
 
 	// we read col 0 to 6
-	if (col++ == LAST_COL_TO_READ) {
+	if (++col == LAST_COL_TO_READ) {
 		col = 0;
 		Timer1.stop();
 		// update from with (or at end) of interrupt
 		FastLED.show();
+		rowIndex = row;
+		if( colChanged ) switchChanged =true;
+		colChanged = false;
 	}
 }
 
@@ -60,28 +66,29 @@ SwitchScanner::~SwitchScanner() {
 }
 
 void SwitchScanner::update(uint32_t now) {
+
 	if( now > nextPeriodic ) {
 		nextPeriodic = now + delay;
 		for (int h = 0; h < handlerIndex; h++) {
 			if (handlers[h].trigger == PERIODIC ) {
-				bool active = (rows[rowIndex][col] & handlers[h].rowMask) == LOW;
-				handlers[h].action->onSwitchUpdate(active);
+				bool active = (rows[rowIndex][handlers[h].col] & handlers[h].rowMask) == LOW;
+				handlers[h].action->onSwitchUpdate(active, handlers[h].col*100+handlers[h].row);
 			}
 		}
 	}
 
 	if (switchChanged) {
 		int nrow = rowIndex == 1 ? 0 : 1;
-
-		switchChanged = false;
 		// scan handlers
 		for (int h = 0; h < handlerIndex; h++) {
-			if (handlers[h].col == col && handlers[h].trigger == EDGE) {
+			if (handlers[h].trigger == EDGE) {
+//				Serial.println("edge handler found");
+				int col = handlers[h].col;
 				if ((rows[nrow][col] & handlers[h].rowMask)
 						!= (rows[rowIndex][col] & handlers[h].rowMask)) {
-					Serial.println("handler fired...");
+					Serial.print("handler fired col="); Serial.println(col);
 					bool active = (rows[rowIndex][col] & handlers[h].rowMask) == LOW;
-					handlers[h].action->onSwitchUpdate(active);
+					handlers[h].action->onSwitchUpdate(!active,handlers[h].col*100+handlers[h].row);
 				}
 			}
 		}
@@ -91,15 +98,18 @@ void SwitchScanner::update(uint32_t now) {
 		digitalWrite(13, led);
 
 		// dump switches to serial
-		Serial.println("  7 6 5 4 3 2 1 0");
-		for (int col = 0; col < LAST_COL_TO_READ; col++) {
-			Serial.print(col);
-			printbin(rows[rowIndex][col]);
-		}
-		// toggle row index to compare with
-		rowIndex = nrow;
+		dump();
+		switchChanged = false;
 	}
 
+}
+
+void SwitchScanner::dump() {
+	Serial.println("  7 6 5 4 3 2 1 0");
+	for (int col = 0; col < LAST_COL_TO_READ; col++) {
+		Serial.print(col);
+		printbin(rows[rowIndex][col]);
+	}
 }
 
 /**

@@ -10,7 +10,7 @@
 
 class SwitchAction {
 public:
-	virtual void onSwitchUpdate(bool active) = 0;
+	virtual void onSwitchUpdate(bool active, int num) = 0;
 };
 
 

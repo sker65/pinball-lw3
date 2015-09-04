@@ -15,13 +15,16 @@ public:
 	BallStore(int maxBalls);
 	virtual ~BallStore();
 
-	virtual void onSwitchUpdate(bool active);
+	virtual void onSwitchUpdate(bool active, int num);
 
 	int getBalls() const {
 		return balls;
 	}
 
 private:
+
+	int* switches;
+
 	int balls;
 	int maxBalls;
 
