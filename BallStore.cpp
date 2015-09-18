@@ -11,18 +11,35 @@
 BallStore::BallStore(int maxBalls) {
 	this->maxBalls = maxBalls;
 	this->balls = maxBalls;
-	this->switches = (int*)malloc( sizeof(int)*maxBalls);
+	this->switchVal = (int*)malloc( sizeof(int)*maxBalls);
+	this->switchIndex = (int*)malloc( sizeof(int)*maxBalls);
+	for( int i = 0; i<maxBalls; i++) {
+		switchIndex[i] = 0;
+		switchVal[i]=0;
+	}
+	this->lastIndex = 0;
 }
 
 BallStore::~BallStore() {
 }
 
 void BallStore::onSwitchUpdate(bool active, int num) {
-	switches[num%maxBalls] = (active?1:0);
-	balls = 0;
-	for( int i = 0; i<maxBalls; i++) {
-		balls += switches[i];
+	int old = balls;
+	int i = 0;
+	for(i = 0; i<maxBalls; i++) {
+		if( switchIndex[i] == num ) break;
 	}
-	Serial.print("Balls: ");Serial.println(balls);
+	if( i==maxBalls && lastIndex < maxBalls ) { // not found
+		i = lastIndex;
+		switchIndex[lastIndex++] = num;
+	}
+	switchVal[i] = (active?1:0);
+	balls = 0;
+	for(i = 0; i<maxBalls; i++) {
+		balls += switchVal[i];
+	}
+	if(old != balls) {
+			Serial.print("Balls: ");Serial.println(balls);
+	}
 }
 

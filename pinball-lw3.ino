@@ -48,7 +48,7 @@ int allLeds[] = { // von unten nach oben
 		8,20,9 };
 
 Attract attract(allLeds, 33, 20);  // array of led index, num, updates per sec
-NormalPlay normalPlay(allLeds, 33, 20);
+NormalPlay normalPlay(allLeds, 33, 20, 40);
 MultiBallPlay multiBallPlay(allLeds, 33, 20);
 
 LedDriver ledDriver(40);
@@ -74,8 +74,8 @@ void setup() {
 	pinMode(30, OUTPUT); // Port B7 for control wave output
 
 	// register ball store for 3 switches
-	switchScanner.registerSwitchAction(1,0, &ballStore, PERIODIC);
-	switchScanner.registerSwitchAction(1,7, &ballStore, PERIODIC);
+	switchScanner.registerSwitchAction(1,3, &ballStore, PERIODIC);
+	switchScanner.registerSwitchAction(1,2, &ballStore, PERIODIC);
 	switchScanner.registerSwitchAction(1,5, &ballStore, PERIODIC);
 
 	ledDriver.registerEffect(&attract);
@@ -84,8 +84,8 @@ void setup() {
 	ledDriver.registerEffect(&slingLeftFlash);
 	ledDriver.registerEffect(&slingRightFlash);
 
-	switchScanner.registerSwitchAction(4,2,&slingRight, EDGE);
-	switchScanner.registerSwitchAction(3,2,&slingLeft, EDGE);
+	switchScanner.registerSwitchAction(4,4,&slingRight, EDGE);
+	switchScanner.registerSwitchAction(3,4,&slingLeft, EDGE);
 
 	// this is active by default
 	attract.active = true;
@@ -104,11 +104,11 @@ void loop() {
 		multiBallPlay.active = false;
 		break;
 	case 2:
-	case 1:
 		attract.active = false;
 		normalPlay.active = true;
 		multiBallPlay.active = false;
 		break;
+	case 1:
 	case 0:
 		attract.active = false;
 		normalPlay.active = false;

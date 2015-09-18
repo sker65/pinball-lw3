@@ -6,6 +6,7 @@
  */
 
 #include "Attract.h"
+#include "LedDriver.h"
 
 //extern CRGBPalette16 myRedWhiteBluePalette;
 extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
@@ -31,6 +32,12 @@ void Attract::updateLeds(unsigned long now, CRGB* leds) {
 					currentBlending);
 			colorIndex += 3;
 		}
+
+		for (int i = 0; i < 4; i++) {
+			rightBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
+			leftBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
+		}
+
 	}
 }
 

@@ -13,6 +13,11 @@
 
 #include "Effect.h"
 
+#define LEDS_PER_BAT 4
+
+extern CRGB rightBat[LEDS_PER_BAT];
+extern CRGB leftBat[LEDS_PER_BAT];
+
 class LedDriver {
 public:
 	LedDriver(int updatesPerSecond);

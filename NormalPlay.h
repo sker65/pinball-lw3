@@ -11,12 +11,14 @@
 
 class NormalPlay : public Effect {
 public:
-	NormalPlay(int* index, int num, int animationSpeed);
+	NormalPlay(int* index, int num, int animationSpeed, int holdCycles);
 	virtual ~NormalPlay(){};
 
 	virtual void updateLeds( unsigned long now, CRGB* leds );
 
 	uint8_t paletteIndex;
+	int holdCycles;
+	int cycle;
 	int animationDelay;
 	uint32_t nextUpdate;
 };

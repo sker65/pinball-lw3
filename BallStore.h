@@ -22,8 +22,9 @@ public:
 	}
 
 private:
-
-	int* switches;
+	int lastIndex;
+	int* switchVal;
+	int* switchIndex;
 
 	int balls;
 	int maxBalls;
