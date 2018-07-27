@@ -12,7 +12,7 @@
 
 class Effect {
 public:
-	Effect(int level, int* index, int num);
+	Effect(int level, const int* index, int num);
 	virtual ~Effect();
 
 	virtual void updateLeds( unsigned long now, CRGB* leds ) = 0;
@@ -21,7 +21,7 @@ public:
 	int level;
 	uint32_t startTime;
 	bool active = false;
-	int* index;
+	const int* index;
 	int num;
 };
 

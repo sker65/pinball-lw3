@@ -12,7 +12,7 @@
 
 class Flash : public Effect {
 public:
-	Flash(int duration, CRGB* color, int* pos, int num, int level);
+	Flash(int duration, CRGB* color, const int* pos, int num, int level);
 	virtual ~Flash();
 
 	virtual void updateLeds( unsigned long now, CRGB* leds );

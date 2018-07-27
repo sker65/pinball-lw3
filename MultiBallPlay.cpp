@@ -7,7 +7,7 @@
 
 #include "MultiBallPlay.h"
 
-MultiBallPlay::MultiBallPlay(int* index, int num, int animationSpeed) : Effect(0,index,num) {
+MultiBallPlay::MultiBallPlay(const int* index, int num, int animationSpeed) : Effect(0,index,num) {
 	this->animationDelay = 1000 / animationSpeed;
 	paletteIndex = 0;
 	nextUpdate = 0;

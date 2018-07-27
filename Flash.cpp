@@ -7,7 +7,7 @@
 
 #include "Flash.h"
 
-Flash::Flash(int duration, CRGB* color, int* index, int num, int level) : Effect(level, index, num) {
+Flash::Flash(int duration, CRGB* color, const int* index, int num, int level) : Effect(level, index, num) {
 	this->duration = duration;
 	this->color = color;
 }

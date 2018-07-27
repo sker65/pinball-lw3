@@ -12,7 +12,7 @@
 
 class Attract : public Effect {
 public:
-	Attract(int* index, int num, int animationSpeed);
+	Attract(const int* index, int num, int animationSpeed);
 	virtual ~Attract(){};
 
 	virtual void updateLeds( unsigned long now, CRGB* leds );

@@ -11,7 +11,7 @@
 
 class MultiBallPlay : public Effect {
 public:
-	MultiBallPlay(int* index, int num, int animationSpeed);
+	MultiBallPlay(const int* index, int num, int animationSpeed);
 	virtual ~MultiBallPlay(){};
 	virtual void updateLeds( unsigned long now, CRGB* leds );
 

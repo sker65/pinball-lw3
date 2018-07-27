@@ -8,37 +8,38 @@
 #include "LedDriver.h"
 
 #define LED_PIN     12
-#define NUM_LEDS    36
+#define NUM_LEDS    62
 #define BRIGHTNESS  255
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 
 CRGB leds[NUM_LEDS];
 
-CRGB leftBat[LEDS_PER_BAT];
-CRGB rightBat[LEDS_PER_BAT];
+//CRGB leftBat[LEDS_PER_BAT];
+//CRGB rightBat[LEDS_PER_BAT];
 
 LedDriver::LedDriver(int updatesPerSecond) {
 	this->nextUpdate = 0;
 	this->millisBetweenUpdates = 1000 / updatesPerSecond;
 
-	pinMode(12, OUTPUT); // LED
-	pinMode(11, OUTPUT); // LED
-	pinMode(10, OUTPUT); // LED
+	pinMode(LED_PIN, OUTPUT); // LED
+	//pinMode(11, OUTPUT); // LED
+	//pinMode(10, OUTPUT); // LED
 
 
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalPixelString);
-	FastLED.addLeds<LED_TYPE, 11, COLOR_ORDER>(leftBat, LEDS_PER_BAT).setCorrection(TypicalPixelString);
-	FastLED.addLeds<LED_TYPE, 10, COLOR_ORDER>(rightBat, LEDS_PER_BAT).setCorrection(TypicalPixelString);
+//	FastLED.addLeds<LED_TYPE, 11, COLOR_ORDER>(leftBat, LEDS_PER_BAT).setCorrection(TypicalPixelString);
+//	FastLED.addLeds<LED_TYPE, 10, COLOR_ORDER>(rightBat, LEDS_PER_BAT).setCorrection(TypicalPixelString);
 
 	FastLED.setBrightness( BRIGHTNESS );
 	numberOfEffects = 0;
+	CRGB warmWhite100( 255, 214, 0xAA); // 0xFF, 0xD6, 0xAA
 
-	for(int i = 0; i< LEDS_PER_BAT; i++) {
-		leftBat[i] = CRGB::Black;
-		rightBat[i] = CRGB::Black;
+	for(int i = 0; i< NUM_LEDS; i++) {
+		leds[i] = warmWhite100;
 	}
-
+	FastLED.show();
+//	FastLED.delay(100);
 }
 
 LedDriver::~LedDriver() {
@@ -55,10 +56,10 @@ void LedDriver::update(uint32_t now) {
 		}
 		level++;
 	}
-//	if (now > nextUpdate) {
-//		nextUpdate = now + millisBetweenUpdates;
-//		FastLED.show();
-//	}
+	if (now > nextUpdate) {
+		nextUpdate = now + millisBetweenUpdates;
+		FastLED.show();
+	}
 }
 
 void LedDriver::registerEffect(Effect* effect) {

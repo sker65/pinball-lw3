@@ -7,7 +7,7 @@
 
 #include "Effect.h"
 
-Effect::Effect(int level, int*index, int num) {
+Effect::Effect(int level, const int* index, int num) {
 	this->level = level;
 	this->startTime = 0L;
 	this->index = index;

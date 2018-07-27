@@ -11,7 +11,7 @@
 
 class NormalPlay : public Effect {
 public:
-	NormalPlay(int* index, int num, int animationSpeed, int holdCycles);
+	NormalPlay(const int* index, int num, int animationSpeed, int holdCycles, int giSense);
 	virtual ~NormalPlay(){};
 
 	virtual void updateLeds( unsigned long now, CRGB* leds );
@@ -21,6 +21,7 @@ public:
 	int cycle;
 	int animationDelay;
 	uint32_t nextUpdate;
+	int giSense;
 };
 
 #endif /* NORMALPLAY_H_ */

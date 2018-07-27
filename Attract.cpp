@@ -11,7 +11,7 @@
 //extern CRGBPalette16 myRedWhiteBluePalette;
 extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
-Attract::Attract(int* index, int num, int animationSpeed) : Effect(0, index, num) {
+Attract::Attract(const int* index, int num, int animationSpeed) : Effect(0, index, num) {
 	currentPalette = RainbowColors_p;
 	currentBlending = BLEND;
 	startIndex = 0;
@@ -33,10 +33,10 @@ void Attract::updateLeds(unsigned long now, CRGB* leds) {
 			colorIndex += 3;
 		}
 
-		for (int i = 0; i < 4; i++) {
-			rightBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
-			leftBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
-		}
+//		for (int i = 0; i < 4; i++) {
+//			rightBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
+//			leftBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
+//		}
 
 	}
 }
