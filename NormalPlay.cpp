@@ -40,12 +40,12 @@ void NormalPlay::updateLeds(unsigned long now, CRGB* leds) {
 		CRGBPalette16 pal = redBluePallette;
 
 		for (int i = 0; i < num; i++) {
-			leds[index[i]] = ColorFromPalette(pal, colorIndex, 255, BLEND);
+			leds[index[i]] = ColorFromPalette(pal, colorIndex, 255, LINEARBLEND);
 		}
 
 		for (int i = 0; i < 4; i++) {
-			rightBat[i] = ColorFromPalette(pal, colorIndex, 180, BLEND);
-			leftBat[i] = ColorFromPalette(pal, colorIndex, 180, BLEND);
+			rightBat[i] = ColorFromPalette(pal, colorIndex, 180, LINEARBLEND);
+			leftBat[i] = ColorFromPalette(pal, colorIndex, 180, LINEARBLEND);
 		}
 
 	}

@@ -13,7 +13,7 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
 Attract::Attract(int* index, int num, int animationSpeed) : Effect(0, index, num) {
 	currentPalette = RainbowColors_p;
-	currentBlending = BLEND;
+	currentBlending = LINEARBLEND;
 	startIndex = 0;
 	nextUpdate = 0;
 	this->animationDelay = 1000 / animationSpeed;
@@ -34,8 +34,8 @@ void Attract::updateLeds(unsigned long now, CRGB* leds) {
 		}
 
 		for (int i = 0; i < 4; i++) {
-			rightBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
-			leftBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, BLEND);
+			rightBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, LINEARBLEND);
+			leftBat[i] = ColorFromPalette(currentPalette, colorIndex, 180, LINEARBLEND);
 		}
 
 	}
@@ -57,7 +57,7 @@ void Attract::ChangePalettePeriodically() {
 		lastSecond = secondHand;
 		if (secondHand == 0) {
 			currentPalette = RainbowColors_p;
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 20) {
 			currentPalette = RainbowStripeColors_p;
@@ -65,15 +65,15 @@ void Attract::ChangePalettePeriodically() {
 		}
 		if (secondHand == 40) {
 			currentPalette = RainbowStripeColors_p;
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 50) {
 			SetupPurpleAndGreenPalette();
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 60) {
 			SetupTotallyRandomPalette();
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 65) {
 			SetupBlackAndWhiteStripedPalette();
@@ -81,15 +81,15 @@ void Attract::ChangePalettePeriodically() {
 		}
 		if (secondHand == 75) {
 			SetupBlackAndWhiteStripedPalette();
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 85) {
 			currentPalette = CloudColors_p;
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 95) {
 			currentPalette = PartyColors_p;
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 		if (secondHand == 110) {
 			currentPalette = myRedWhiteBluePalette_p;
@@ -97,7 +97,7 @@ void Attract::ChangePalettePeriodically() {
 		}
 		if (secondHand == 120) {
 			currentPalette = myRedWhiteBluePalette_p;
-			currentBlending = BLEND;
+			currentBlending = LINEARBLEND;
 		}
 	}
 }
@@ -169,4 +169,3 @@ const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM = { CRGB::Red,
 // palette to Green (0,255,0) and Blue (0,0,255), and then retrieved
 // the first sixteen entries from the virtual palette (of 256), you'd get
 // Green, followed by a smooth gradient from green-to-blue, and then Blue.
-
